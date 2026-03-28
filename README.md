@@ -68,61 +68,7 @@ learnify/
 
 ---
 
-## ⚙️ Setup & Installation
 
-### 1. Clone the project
-```bash
-git clone https://github.com/yourname/learnify.git
-cd learnify
-```
-
-### 2. Create a virtual environment
-```bash
-python -m venv venv
-source venv/bin/activate        # Windows: venv\Scripts\activate
-```
-
-### 3. Install dependencies
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Set up MySQL
-```bash
-mysql -u root -p < schema.sql
-```
-
-### 5. Configure environment
-Edit `config.py` and set your MySQL credentials:
-```python
-MYSQL_USER     = 'root'
-MYSQL_PASSWORD = 'your_password'
-MYSQL_DB       = 'learnify'
-SECRET_KEY     = 'change-this-in-production'
-```
-
-### 6. Create the admin user
-```bash
-flask shell
-```
-```python
-from werkzeug.security import generate_password_hash
-from app import mysql, app
-
-with app.app_context():
-    cur = mysql.connection.cursor()
-    h = generate_password_hash('Admin@123')
-    cur.execute("UPDATE users SET password_hash=%s WHERE email='admin@learnify.com'", (h,))
-    mysql.connection.commit()
-```
-
-### 7. Run the app
-```bash
-flask run
-# Visit: http://127.0.0.1:5000
-```
-
----
 
 ## 👥 User Roles
 
@@ -132,11 +78,6 @@ flask run
 | Instructor | Create courses, add sections/lessons/quizzes, view student stats  |
 | Admin      | Manage all users, approve/archive courses, view platform analytics|
 
-### Default Admin Login
-```
-Email:    admin@learnify.com
-Password: Admin@123
-```
 
 ---
 
@@ -268,6 +209,4 @@ Password: Admin@123
 
 ---
 
-## 📄 License
 
-This project is for educational purposes. Built as a CSE portfolio project.
