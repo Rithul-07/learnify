@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}register{% endblock %}
+{% block content %}
+
+<div class="auth-container">
+    <h3 class="auth-card">Sign-Up</h3>
+    
+    <form method="POST">
+    
+        <div class="form-grp">
+            <label for="firstname" >UserName</label>
+            <br/>
+            <input type="text" class="form-ctrl" id="firstname" name="firstname" placeholder="Enter firstname"/>
+        </div>
+        <div class="form-grp">
+            <label for="email" >Email Address</label>
+            <br/>
+            <input type="email" class="form-ctrl" id="email" name="email" placeholder="Enter Valid Email"/>
+        <div class="form-grp">
+            <label for="password" >PassWord</label>
+            <br/>
+            <input type="text" class="form-ctrl" id="password" name="password" placeholder="Enter PassWord"/>
+        </div>
+        <div class="form-grp">
+            <label for="password1">Confirm Password</label>
+            <br/>
+            <input type="text" class="form-ctrl" id="password1" name="password1" placeholder="Confirm Password"/>
+        </div>
+
+        <br/>
+        <button type="submit" class="btn btn-1">Sign Up</button>
+
+        <div class="divider">
+            <span>Or continue with</span>
+        </div>
+        
+    </form>
+</div>
+
+{% endblock %}
