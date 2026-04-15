@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block title %}{{ course.title }} — Learnify{% endblock %}
+
+{% block content %}
+<div class="container page-shell">
+
+    <!-- Course Header -->
+    <div class="detail-header mb-4 fade-up">
+        <div class="row g-0">
+            <div class="col-lg-8 p-4 p-md-5">
+                <div class="d-flex gap-2 mb-3 flex-wrap">
+                    <span class="course-badge">{{ course.category_name or 'General' }}</span>
+                    <span class="meta-pill">{{ course.level | title }}</span>
+                </div>
+                <h1 class="h2 mb-3">{{ course.title }}</h1>
+                <p class="text-muted mb-4">{{ course.description }}</p>
+                <div class="course-meta">
+                    <span><i class="bi bi-people"></i> {{ course.enrolled_count | default('0') }} students</span>
+                    <span><i class="bi bi-journal-text"></i> {{ total_lessons }} lessons</span>
+                </div>
+            </div>
+
+            <div class="col-lg-4 detail-sidebar">
+                {% if session.get('user_id') %}
+                    {% if is_enrolled %}
+                        <div class="w-100 mb-3">
+                            <div class="d-flex justify-content-between mb-1">
+                                <small class="text-muted">Progress</small>
+                                <small class="text-muted">{{ completed_count }} / {{ total_lessons }}</small>
+                            </div>
+                            {% set percent = (completed_count / total_lessons * 100) if total_lessons > 0 else 0 %}
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar" style="width: {{ percent }}%;"></div>
+                            </div>
+                        </div>
+                        <a href="{{ url_for('student.progress', slug=course.slug) }}" class="btn btn-primary-gradient w-100">
+                            <i class="bi bi-play-fill me-1"></i>Resume Course
+                        </a>
+                    {% else %}
+                        <form method="POST" action="{{ url_for('courses.enroll', slug=course.slug) }}" class="w-100">
+                            <button type="submit" class="btn btn-primary-gradient w-100 py-2">
+                                <i class="bi bi-plus-circle me-1"></i>Enroll Now
+                            </button>
+                        </form>
+                    {% endif %}
+                {% else %}
+                    <a href="{{ url_for('auth.login') }}" class="btn btn-glass w-100">
+                        <i class="bi bi-box-arrow-in-right me-1"></i>Log in to Enroll
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Curriculum -->
+    <div class="col-lg-9 mx-auto fade-up fade-up-d1">
+        <h5 class="mb-3">
+            <i class="bi bi-list-columns-reverse me-2" style="color: var(--accent);"></i>Course Curriculum
+        </h5>
+
+        <div class="accordion" id="curriculumAccordion">
+            {% for section in sections %}
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button {% if not loop.first %}collapsed{% endif %}" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#collapse{{ loop.index }}"
+                        aria-expanded="{% if loop.first %}true{% else %}false{% endif %}">
+                        {{ section.title }}
+                        <span class="meta-pill ms-auto me-2">{{ section.lessons|length }} lessons</span>
+                    </button>
+                </h2>
+                <div id="collapse{{ loop.index }}" class="accordion-collapse collapse {% if loop.first %}show{% endif %}"
+                    data-bs-parent="#curriculumAccordion">
+                    <div>
+                        {% for lesson in section.lessons %}
+                        <div class="lesson-row">
+                            <div class="d-flex align-items-center gap-2">
+                                {% if session.get('user_id') and is_enrolled and lesson.id in completed_lessons %}
+                                    <i class="bi bi-check-circle-fill" style="color: var(--green);"></i>
+                                {% else %}
+                                    <i class="bi bi-play-circle" style="color: var(--text-faint);"></i>
+                                {% endif %}
+                                <span class="{% if lesson.id in completed_lessons %}text-muted{% endif %} small">{{ lesson.title }}</span>
+                            </div>
+                            <small class="text-muted">{{ lesson.duration | default(10) }} min</small>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="glass-card empty-state">
+                <i class="bi bi-journal-x"></i>
+                <p class="text-muted mb-0">Curriculum is being updated.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

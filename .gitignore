@@ -1,0 +1,28 @@
+# Python Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.venv/
+venv/
+ENV/
+env/
+
+# IDE / Editor folders
+.vscode/
+.idea/
+
+# Local configuration / Secrets
+.env
+instance/
+.pytest_cache/
+
+# Database / OS files
+*.sql.gz
+*.log
+.DS_Store
+
+# Local MySQL data (Project Setup)
+mysql_data/
+seed_db.py

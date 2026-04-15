@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Manage Students — Learnify{% endblock %}
+
+{% block content %}
+<div class="container page-shell">
+    <div class="d-flex align-items-center justify-content-between mb-4 fade-up">
+        <div>
+            <h1 class="mb-1">Manage <span class="text-gradient">Students</span></h1>
+            <p class="text-muted small mb-0">View and manage all registered users.</p>
+        </div>
+        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-glass btn-sm">
+            <i class="bi bi-arrow-left me-1"></i>Dashboard
+        </a>
+    </div>
+
+    <div class="glass-card overflow-hidden fade-up fade-up-d1">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th class="border-0 bg-transparent px-4 py-3">Name</th>
+                        <th class="border-0 bg-transparent py-3">Email</th>
+                        <th class="border-0 bg-transparent py-3">Role</th>
+                        <th class="border-0 bg-transparent py-3">Status</th>
+                        <th class="border-0 bg-transparent py-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td class="bg-transparent align-middle px-4" style="border-color: var(--border) !important;">{{ user.full_name }}</td>
+                        <td class="bg-transparent align-middle" style="border-color: var(--border) !important;">{{ user.email }}</td>
+                        <td class="bg-transparent align-middle" style="border-color: var(--border) !important;">
+                            <span class="meta-pill">{{ user.role }}</span>
+                        </td>
+                        <td class="bg-transparent align-middle" style="border-color: var(--border) !important;">
+                            {% if user.is_active %}
+                            <span class="meta-pill" style="background: var(--green-soft); color: var(--green);">Active</span>
+                            {% else %}
+                            <span class="meta-pill" style="background: var(--red-soft); color: var(--red);">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td class="bg-transparent align-middle" style="border-color: var(--border) !important;">
+                            <form method="POST" action="{{ url_for('admin.toggle_user', user_id=user.id) }}" style="display:inline;">
+                                <button type="submit" class="btn btn-glass btn-sm">Toggle</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="bg-transparent text-center py-5 text-muted border-0">No users found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

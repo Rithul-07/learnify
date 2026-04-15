@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Login — Learnify{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="glass-card auth-container fade-up">
+        <div class="text-center mb-4">
+            <div class="mb-3">
+                <i class="bi bi-person-circle" style="font-size: 2.5rem; color: var(--accent);"></i>
+            </div>
+            <h1 class="h4 mb-1">Welcome back</h1>
+            <p class="text-muted small mb-0">Sign in to continue learning.</p>
+        </div>
+
+        <form method="POST" action="">
+            <div class="mb-3">
+                <label class="form-label">Email Address</label>
+                <input type="email" name="email" class="form-control" placeholder="you@example.com" required>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">Password</label>
+                <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary-gradient w-100 py-2">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Login
+            </button>
+        </form>
+
+        <div class="text-center mt-4">
+            <p class="text-muted small mb-0">Don't have an account? <a href="{{ url_for('auth.register') }}">Register here</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

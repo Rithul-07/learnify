@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block title %}Post a Course — Learnify{% endblock %}
+
+{% block content %}
+<div class="container page-shell">
+    <div class="d-flex align-items-center justify-content-between mb-4 fade-up">
+        <div>
+            <h1 class="mb-1">Post <span class="text-gradient">a Course</span></h1>
+            <p class="text-muted small mb-0">Create a new course with sections and lessons.</p>
+        </div>
+        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-glass btn-sm">
+            <i class="bi bi-arrow-left me-1"></i>Dashboard
+        </a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8 fade-up fade-up-d1">
+            <div class="glass-card p-4 p-md-5">
+                <form method="POST" action="">
+                    <h5 class="mb-4 pb-3" style="border-bottom: 1px solid var(--border);">
+                        <i class="bi bi-info-circle me-2" style="color: var(--accent);"></i>General Information
+                    </h5>
+
+                    <div class="mb-3">
+                        <label class="form-label">Course Title</label>
+                        <input type="text" name="title" class="form-control" placeholder="e.g. Python for Beginners" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="4" placeholder="Describe what students will learn…" required></textarea>
+                    </div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label class="form-label">Category</label>
+                            <select name="category_id" class="form-select">
+                                {% for cat in categories %}
+                                <option value="{{ cat.id }}">{{ cat.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Level</label>
+                            <select name="level" class="form-select">
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Status</label>
+                            <select name="status" class="form-select">
+                                <option value="draft">Draft</option>
+                                <option value="published">Published</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <h5 class="mb-3 mt-4 pb-3" style="border-bottom: 1px solid var(--border);">
+                        <i class="bi bi-list-columns-reverse me-2" style="color: var(--accent);"></i>Initial Curriculum
+                    </h5>
+                    <p class="text-muted small mb-3">Add one section and lesson to start. You can expand later.</p>
+
+                    <div class="glass-panel p-4 mb-4">
+                        <div class="mb-3">
+                            <label class="form-label">Section Title</label>
+                            <input type="text" name="section_title_0" class="form-control" value="Intro Section">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Lesson Title</label>
+                            <input type="text" name="lesson_title_0_0" class="form-control" value="First Lesson">
+                        </div>
+                        <div class="mb-0">
+                            <label class="form-label">Lesson Content</label>
+                            <textarea name="lesson_content_0_0" class="form-control" rows="3">Welcome to the first lesson.</textarea>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary-gradient w-100 py-2">
+                        <i class="bi bi-plus-circle me-2"></i>Create Course
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-4 fade-up fade-up-d2">
+            <div class="glass-panel p-4 sticky-top" style="top: 90px;">
+                <h5 class="mb-3">
+                    <i class="bi bi-lightbulb me-2" style="color: var(--yellow);"></i>Tips
+                </h5>
+                <ul class="text-muted small ps-3 mb-0" style="line-height: 2;">
+                    <li>Use a clear title that explains what will be learned.</li>
+                    <li>Break topics into small, digestible sections.</li>
+                    <li>Include practical examples in your lessons.</li>
+                    <li>State prerequisites clearly in the description.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

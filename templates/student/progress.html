@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}{{ course.title }} — Progress{% endblock %}
+
+{% block content %}
+<div class="container page-shell">
+    <div class="mb-4 fade-up">
+        <a href="{{ url_for('student.dashboard') }}" class="text-muted text-decoration-none small">
+            <i class="bi bi-arrow-left me-1"></i>Back to Dashboard
+        </a>
+        <h1 class="mt-2 mb-1">{{ course.title }}</h1>
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+            <span class="text-muted small">{{ completed_count }} of {{ total_lessons }} lessons completed</span>
+            {% set percent = (completed_count / total_lessons * 100) if total_lessons > 0 else 0 %}
+            <div class="progress flex-grow-1" style="height: 6px; max-width: 300px;">
+                <div class="progress-bar" style="width: {{ percent }}%;"></div>
+            </div>
+            <span class="text-muted small">{{ percent | int }}%</span>
+        </div>
+    </div>
+
+    <div class="col-lg-9 fade-up fade-up-d1">
+        {% for section in sections %}
+        <div class="mb-4">
+            <h5 class="mb-3">
+                <span class="meta-pill me-2">{{ loop.index }}</span>{{ section.title }}
+            </h5>
+
+            {% for lesson in section.lessons %}
+            <div class="lesson-card {% if lesson.id in completed_lessons %}completed{% endif %}">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <div class="d-flex align-items-center gap-3">
+                        {% if lesson.id in completed_lessons %}
+                            <i class="bi bi-check-circle-fill" style="color: var(--green); font-size: 1.2rem;"></i>
+                        {% else %}
+                            <i class="bi bi-circle" style="color: var(--text-faint); font-size: 1.2rem;"></i>
+                        {% endif %}
+                        <div>
+                            <h6 class="mb-0 small">{{ lesson.title }}</h6>
+                            {% if lesson.duration %}
+                            <small class="text-muted">{{ lesson.duration }} min</small>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if lesson.id not in completed_lessons %}
+                    <form method="POST" action="{{ url_for('courses.complete_lesson', slug=course.slug, lesson_id=lesson.id) }}">
+                        <button type="submit" class="btn btn-glass btn-sm">
+                            <i class="bi bi-check2 me-1"></i>Mark Complete
+                        </button>
+                    </form>
+                    {% else %}
+                    <span class="meta-pill" style="background: var(--green-soft); color: var(--green);">Done</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
