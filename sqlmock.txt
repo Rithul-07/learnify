@@ -1,0 +1,77 @@
+-- Show structure of key tables
+DESC users;
+DESC courses;
+DESC enrollments;
+DESC lesson_progress;
+
+-- Add an admin user
+INSERT INTO users (username, email, password_hash, full_name, role)
+VALUES ('admin1', 'admin@learnify.com', SHA2('admin123', 256), 'Admin User', 'admin');
+
+-- Add student users
+INSERT INTO users (username, email, password_hash, full_name, role) VALUES
+('john_doe',   'john@example.com',  SHA2('pass123', 256), 'John Doe',   'student'),
+('jane_smith', 'jane@example.com',  SHA2('pass456', 256), 'Jane Smith', 'student'),
+('raj_patel',  'raj@example.com',   SHA2('pass789', 256), 'Raj Patel',  'student');
+
+-- Add a course (admin_id = 1, category Web Dev = 1)
+INSERT INTO courses (title, slug, description, category_id, level, status, admin_id) VALUES
+('Full Stack Web Dev', 'full-stack-web-dev', 'Learn HTML, CSS, JS and more', 1, 'beginner', 'published', 1),
+('Python Masterclass',  'python-masterclass',  'Python from zero to hero', 2, 'intermediate', 'published', 1);
+
+-- Add sections
+INSERT INTO sections (course_id, title, position) VALUES
+(1, 'HTML Basics', 1),
+(1, 'CSS Fundamentals', 2),
+(2, 'Python Basics', 1);
+
+-- Add lessons
+INSERT INTO lessons (section_id, course_id, title, content, duration, position) VALUES
+(1, 1, 'Intro to HTML',    'HTML tags and structure', 300, 1),
+(1, 1, 'HTML Forms',       'Forms and inputs',        420, 2),
+(2, 1, 'CSS Selectors',    'Selectors and specificity',360, 1),
+(3, 2, 'Variables & Types','Python data types',        480, 1),
+(3, 2, 'Loops & Functions','Control flow',             540, 2);
+
+-- Enroll students
+INSERT INTO enrollments (user_id, course_id) VALUES
+(2, 1), (3, 1), (4, 2), (2, 2);
+
+-- All published courses with category name
+SELECT c.title, c.level, cat.name AS category, c.status
+FROM courses c
+JOIN categories cat ON c.category_id = cat.id
+WHERE c.status = 'published';
+
+-- How many students per course
+SELECT c.title, COUNT(e.user_id) AS total_enrolled
+FROM courses c
+LEFT JOIN enrollments e ON c.id = e.course_id
+GROUP BY c.id, c.title
+ORDER BY total_enrolled DESC;
+
+-- All lessons in a course with section name
+SELECT s.title AS section, l.title AS lesson, l.duration
+FROM lessons l
+JOIN sections s ON l.section_id = s.id
+WHERE l.course_id = 1
+ORDER BY s.position, l.position;
+
+-- Mark all lessons complete for user 2 in course 1
+-- (This will auto-complete enrollment AND auto-issue a certificate via triggers)
+
+INSERT INTO lesson_progress (user_id, lesson_id, course_id, completed, completed_at) VALUES
+(2, 1, 1, 1, NOW()),
+(2, 2, 1, 1, NOW()),
+(2, 3, 1, 1, NOW());
+
+-- Mark the last lesson — TRIGGER fires here
+UPDATE lesson_progress SET completed = 1, completed_at = NOW()
+WHERE user_id = 2 AND lesson_id = 3 AND course_id = 1;
+
+-- Verify enrollment is now marked complete
+SELECT * FROM enrollments WHERE user_id = 2 AND course_id = 1;
+
+-- Verify certificate was auto-generated
+SELECT * FROM certificates WHERE user_id = 2;
+
